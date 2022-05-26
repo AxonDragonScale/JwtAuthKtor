@@ -11,7 +11,6 @@ import io.ktor.server.response.*
 import io.ktor.server.request.*
 
 fun Application.configureSecurity() {
-
     authentication {
         jwt {
             val jwtAudience = this@configureSecurity.environment.config.property("jwt.audience").getString()

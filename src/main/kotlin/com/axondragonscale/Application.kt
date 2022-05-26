@@ -1,14 +1,19 @@
 package com.axondragonscale
 
-import io.ktor.server.engine.*
-import io.ktor.server.netty.*
-import com.axondragonscale.plugins.*
+import com.axondragonscale.plugins.configureMonitoring
+import com.axondragonscale.plugins.configureRouting
+import com.axondragonscale.plugins.configureSecurity
+import com.axondragonscale.plugins.configureSerialization
+import io.ktor.server.application.*
+import io.ktor.server.netty.EngineMain
 
-fun main() {
-    embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
-        configureRouting()
-        configureSecurity()
-        configureMonitoring()
-        configureSerialization()
-    }.start(wait = true)
+fun main(args: Array<String>) = EngineMain.main(args)
+
+@Suppress("unused")
+fun Application.module() {
+    configureMonitoring()
+    configureRouting()
+    configureSecurity()
+    configureSerialization()
 }
+
