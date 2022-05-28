@@ -1,6 +1,7 @@
 package com.axondragonscale.repository
 
 import com.axondragonscale.data.model.User
+import org.bson.types.ObjectId
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
 
@@ -15,6 +16,10 @@ class MongoUserRepository(
 
     override suspend fun getUserByUsername(username: String): User? {
         return users.findOne(User::username eq username)
+    }
+
+    override suspend fun getUserById(id: ObjectId): User? {
+        return users.findOneById(id)
     }
 
     override suspend fun insertUser(user: User): Boolean {

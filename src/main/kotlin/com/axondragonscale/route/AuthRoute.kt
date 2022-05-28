@@ -16,6 +16,7 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.bson.types.ObjectId
 import kotlin.run
 
 /**
@@ -97,16 +98,18 @@ fun Route.authenticate() {
     }
 }
 
-fun Route.getUserId() {
+fun Route.getUserInfo(
+    userRepository: UserRepository
+) {
     authenticate {
-        get("userId") {
+        get("userInfo") {
             val principal = call.principal<JWTPrincipal>()
             val userId = principal?.getClaim("userId", String::class)
-
-            if (userId.isNullOrBlank()) {
+            val user = userId?.let { userRepository.getUserById(ObjectId(it)) }
+            if (userId.isNullOrBlank() || user == null) {
                 call.respond(HttpStatusCode.InternalServerError)
             } else {
-                call.respond(HttpStatusCode.OK, userId)
+                call.respond(HttpStatusCode.OK, "Hello, My name is ${user.username}")
             }
         }
     }
